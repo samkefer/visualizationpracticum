@@ -178,6 +178,10 @@ Make a scatter plot that shows the relationship between the variables `depth` (o
 
 ```{r}
 # make practice plot 1 here
+
+df.diamonds |>
+  ggplot(aes(x=depth, y=table)) +
+  geom_point()
 ```
 
 ```{r}
@@ -194,6 +198,9 @@ include_graphics("figures/vis1_practice_plot1.png")
 
 ```{r}
 # make advanced practice plot 1 here
+df.diamonds |>
+  ggplot(aes(x=depth, y=table)) +
+  geom_point(alpha=0.50)
 ```
 
 ```{r}
@@ -300,6 +307,11 @@ Make a bar plot that shows the average `price` of diamonds (on the y-axis) as a 
 
 ```{r}
 # make practice plot 2 here
+df.diamonds|>
+  ggplot(aes(x=clarity, y=price)) +
+  stat_summary(fun = "mean", geom = "bar") +
+  stat_summary(fun.data = "mean_cl_boot",
+                           geom = "linerange")
 ```
 
 ```{r}
@@ -314,6 +326,11 @@ include_graphics("figures/vis1_practice_plot2.png")
 
 ```{r}
 # make advanced practice plot 2 here
+df.diamonds|>
+  ggplot(aes(x=clarity, y=price)) +
+  stat_summary(fun = "mean", geom = "bar", fill="light blue", color = "black") +
+  stat_summary(fun.data = "mean_cl_boot",
+               geom = "linerange")
 ```
 
 ```{r}
@@ -406,6 +423,17 @@ Recreate the plot shown in @fig-practice-plot3.
 
 ```{r}
 # make practice plot 3 here
+
+ggplot(data = df.diamonds,
+       mapping = aes(x = color,
+                     y = price,
+                     group = clarity,
+                     color = clarity)) +
+  stat_summary(fun = "mean",
+               geom = "line",
+               linewidth = 1) +
+  stat_summary(fun.data = "mean_cl_boot",
+               geom = "linerange")
 ```
 
 ```{r}
@@ -420,6 +448,24 @@ include_graphics("figures/vis1_practice_plot3.png")
 
 ```{r}
 # make advanced practice plot 3 here
+
+ggplot(data = df.diamonds,
+       mapping = aes(x = color,
+                     y = price,
+                     group = clarity,
+                     color = clarity)) +
+geom_vline(xintercept = seq(1.5, length(unique(df.diamonds$color)) - 0.5, by = 1),
+             linetype = "dashed",
+             color = "gray70") +
+  stat_summary(fun = "mean",
+               geom = "line",
+               linewidth = 1) +
+  stat_summary(fun.data = "mean_cl_boot",
+               geom = "linerange") +
+  stat_summary(fun = "mean",
+               geom = "point",
+               shape = 21,
+               fill = "white")
 ```
 
 ```{r}
@@ -517,9 +563,9 @@ ggplot(data = df.diamonds,
 
 Several aspects about this plot should be improved:
 
--   the y-axis text is overlapping
--   having both a legend and separate facet labels is redundant
--   having separate fills is not really necessary here
+- the y-axis text is overlapping
+- having both a legend and separate facet labels is redundant
+- having separate fills is not really necessary here
 
 So, what does this plot actually show us? Well, J-colored diamonds tend to be wider than D-colored diamonds. Fascinating!
 
@@ -548,7 +594,23 @@ ggplot(data = df.diamonds,
 Recreate the plot shown in @fig-practice-plot4.
 
 ```{r}
-# make practice plot 4 here
+#| label: fig-stretching-it
+ggplot(data = df.diamonds,
+       mapping = aes(y = price,
+                     x = cut,
+                     fill = cut)) +
+  stat_summary(fun = "mean",
+               geom = "bar",
+               color = "black",
+               position = position_dodge(width = 0.2)) +
+  stat_summary(fun.data = "mean_cl_boot",
+               geom = "linerange",                
+               position = position_dodge(width = 0.2)) +
+  facet_grid(rows = vars(clarity),
+             cols = vars(color)) +
+  theme_classic() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank())
 ```
 
 ```{r}
@@ -605,38 +667,38 @@ Here, I've set `color = "black"` within the `geom_smooth()` function, and now on
 
 ### Cheatsheets
 
--   [RStudio IDE](figures/rstudio-ide.pdf) --\> information about RStudio
--   [RMarkdown](figures/rmarkdown.pdf) --\> information about writing in RMarkdown
--   [RMarkdown reference](figures/rmarkdown-reference.pdf) --\> RMarkdown reference sheet
--   [Data visualization](figures/visualization-principles.pdf) --\> general principles of effective graphic design
--   [ggplot2](figures/data-visualization.pdf) --\> specific information about ggplot
+- [RStudio IDE](figures/rstudio-ide.pdf) --\> information about RStudio
+- [RMarkdown](figures/rmarkdown.pdf) --\> information about writing in RMarkdown
+- [RMarkdown reference](figures/rmarkdown-reference.pdf) --\> RMarkdown reference sheet
+- [Data visualization](figures/visualization-principles.pdf) --\> general principles of effective graphic design
+- [ggplot2](figures/data-visualization.pdf) --\> specific information about ggplot
 
 ### Datacamp courses
 
--   [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r)
--   [ggplot (intro)](https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2)
--   [Reporting](https://www.datacamp.com/courses/communicating-with-data-in-the-tidyverse)
--   [visualization best practices](https://www.datacamp.com/courses/visualization-best-practices-in-r)
+- [Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r)
+- [ggplot (intro)](https://learn.datacamp.com/courses/introduction-to-data-visualization-with-ggplot2)
+- [Reporting](https://www.datacamp.com/courses/communicating-with-data-in-the-tidyverse)
+- [visualization best practices](https://www.datacamp.com/courses/visualization-best-practices-in-r)
 
 ### Books and chapters
 
--   [R graphics cookbook](http://www.cookbook-r.com/Graphs/) --\> quick intro to the the most common graphs
--   [ggplot2 book](https://ggplot2-book.org/)
--   [R for Data Science book](http://r4ds.had.co.nz/)
-    -   [Data visualization](http://r4ds.had.co.nz/data-visualisation.html)
-    -   [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)
--   [Data Visualization -- A practical introduction (by Kieran Healy)](http://socviz.co/)
-    -   [Look at data](http://socviz.co/lookatdata.html#lookatdata)
-    -   [Make a plot](http://socviz.co/makeplot.html#makeplot)
-    -   [Show the right numbers](http://socviz.co/groupfacettx.html#groupfacettx)
--   [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/) --\> very nice resource that goes beyond basic functionality of `ggplot` and focuses on how to make good figures (e.g. how to choose colors, axes, ...)
+- [R graphics cookbook](http://www.cookbook-r.com/Graphs/) --\> quick intro to the the most common graphs
+- [ggplot2 book](https://ggplot2-book.org/)
+- [R for Data Science book](http://r4ds.had.co.nz/)
+  - [Data visualization](http://r4ds.had.co.nz/data-visualisation.html)
+  - [Graphics for communication](http://r4ds.had.co.nz/graphics-for-communication.html)
+- [Data Visualization -- A practical introduction (by Kieran Healy)](http://socviz.co/)
+  - [Look at data](http://socviz.co/lookatdata.html#lookatdata)
+  - [Make a plot](http://socviz.co/makeplot.html#makeplot)
+  - [Show the right numbers](http://socviz.co/groupfacettx.html#groupfacettx)
+- [Fundamentals of Data Visualization](https://serialmentor.com/dataviz/) --\> very nice resource that goes beyond basic functionality of `ggplot` and focuses on how to make good figures (e.g. how to choose colors, axes, ...)
 
 ### Misc
 
--   [nice online ggplot tutorial](https://evamaerey.github.io/ggplot2_grammar_guide/about)
--   [how to read R help files](https://socviz.co/appendix.html#a-little-more-about-r)
--   [ggplot2 extensions](https://exts.ggplot2.tidyverse.org/gallery/) --\> gallery of ggplot2 extension packages
--   [ggplot2 visualizations with code](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html) --\> gallery of plots with code
+- [nice online ggplot tutorial](https://evamaerey.github.io/ggplot2_grammar_guide/about)
+- [how to read R help files](https://socviz.co/appendix.html#a-little-more-about-r)
+- [ggplot2 extensions](https://exts.ggplot2.tidyverse.org/gallery/) --\> gallery of ggplot2 extension packages
+- [ggplot2 visualizations with code](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html) --\> gallery of plots with code
 
 ## Session info
 
